@@ -1,7 +1,8 @@
-var gulp        = require('gulp');
+var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 var sass = require('gulp-sass');
 var spritesmith = require('gulp.spritesmith');
+var fileinclude = require('gulp-file-include');
 var del = require('del');
 
 gulp.task('sass', function () {
@@ -41,7 +42,7 @@ gulp.task('clean', function() {
 
 // Default task
 gulp.task('default', ['clean'], function() {
-    gulp.start('sass', 'browser-sync', 'sprite','watch');
+    gulp.start('sass', 'browser-sync', 'sprite','fileinclude','watch');
 });
 
 gulp.task('watch', function() {
@@ -53,4 +54,13 @@ gulp.task('watch', function() {
     // Watch image files
     gulp.watch('./source/img/sprite/*.*', ['sprite']);
 
+});
+
+gulp.task('fileinclude', function() {
+    gulp.src(['source/*.html'])
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(gulp.dest('build/'));
 });
